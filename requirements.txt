@@ -3,3 +3,8 @@ numpy
 pandas
 pydeck
 streamlit
+textblob
+matplotlib
+langchain
+pyvis
+networkx

@@ -1,51 +1,41 @@
-# Copyright (c) Streamlit Inc. (2018-2022) Snowflake Inc. (2022)
-#
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-#
-#     http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
-
 import streamlit as st
-from streamlit.logger import get_logger
+import os
+from PIL import Image
 
-LOGGER = get_logger(__name__)
+# Streamlit app title
+st.title("Inside Out Characters Sentiment Explorer")
 
+# Directory path for the scenes
+dir_path = 'scenes'
 
-def run():
-    st.set_page_config(
-        page_title="Hello",
-        page_icon="👋",
-    )
+# Check if directory exists
+if not os.path.exists(dir_path):
+    st.error(f"Directory {dir_path} does not exist.")
+    st.stop()
 
-    st.write("# Welcome to Streamlit! 👋")
+# Get list of available HTML files in the directory
+html_files = [f for f in os.listdir(dir_path) if f.endswith('.html') and f.split('.')[0].isdigit()]
+html_files.sort(key=lambda f: int(f.split('.')[0]))  # Sort by scene number
 
-    st.sidebar.success("Select a demo above.")
+scene_numbers = [int(f.split('.')[0]) for f in html_files]
 
-    st.markdown(
-        """
-        Streamlit is an open-source app framework built specifically for
-        Machine Learning and Data Science projects.
-        **👈 Select a demo from the sidebar** to see some examples
-        of what Streamlit can do!
-        ### Want to learn more?
-        - Check out [streamlit.io](https://streamlit.io)
-        - Jump into our [documentation](https://docs.streamlit.io)
-        - Ask a question in our [community
-          forums](https://discuss.streamlit.io)
-        ### See more complex demos
-        - Use a neural net to [analyze the Udacity Self-driving Car Image
-          Dataset](https://github.com/streamlit/demo-self-driving)
-        - Explore a [New York City rideshare dataset](https://github.com/streamlit/demo-uber-nyc-pickups)
-    """
-    )
+selected_scene = st.select_slider(
+    "Select Scene",
+    options=scene_numbers)
 
+# Uncomment if you want to display the colorbar image
+# colorbar_path = os.path.join(dir_path, "colorbar.png")
+# if os.path.exists(colorbar_path):
+#     colorbar_image = Image.open(colorbar_path)
+#     st.image(colorbar_image, caption='Sentiment Scale')
+# else:
+#     st.warning(f"Colorbar image not found at {colorbar_path}")
 
-if __name__ == "__main__":
-    run()
+# Ensure the HTML file exists before trying to open it
+
+scene_file_path = os.path.join(dir_path, f"{selected_scene}.html")
+if os.path.exists(scene_file_path):
+    with open(scene_file_path, 'r', encoding='utf-8') as selected_files:
+        st.components.v1.html(selected_files.read(), width=450, height=400, scrolling=False)
+else:
+    st.error(f"Scene file {selected_scene}.html does not exist.")
