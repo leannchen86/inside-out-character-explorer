@@ -1,9 +1,9 @@
 from langchain.graphs import Neo4jGraph
 import os
 
-# NEO4J_URI='neo4j+s://f221c04c.databases.neo4j.io'
-# NEO4J_USERNAME="neo4j"
-# NEO4J_PASSWORD="J9E0TiResRKIyS7AKvOXsonXbnFiv0zuy9wMsXwt0F8"
+NEO4J_URI='neo4j+s://f221c04c.databases.neo4j.io'
+NEO4J_USERNAME="neo4j"
+NEO4J_PASSWORD="J9E0TiResRKIyS7AKvOXsonXbnFiv0zuy9wMsXwt0F8"
 
 graph = Neo4jGraph(
     url=NEO4J_URI,
