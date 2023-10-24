@@ -44,13 +44,25 @@ with open('chunks.json', 'r') as input_file:
     chunks_from_json = json.load(input_file)
 
 # Store vectors to Neo4j
-graph.query("""
-    UNWIND $data AS row
-    CREATE (c:Chunk {text: row.text})
-    WITH c, row
-    CALL db.create.setVectorProperty(c, 'embedding', row.embedding)
-    YIELD node
-    RETURN distinct 'done'
+# Execute the Cypher query to count all nodes
+result = graph.query("MATCH (n) RETURN count(n) AS nodeCount")
+
+# Extract the count from the result and assign it to a variable
+node_count = result[0]['nodeCount']
+
+# Now you can use the node_count variable in your conditions or other logic
+if node_count >= 330:
+    # Delete all nodes
+    graph.query("MATCH (n) DETACH DELETE n")
+
+    # Create new nodes
+    graph.query("""
+        UNWIND $data AS row
+        CREATE (c:Chunk {text: row.text})
+        WITH c, row
+        CALL db.create.setVectorProperty(c, 'embedding', row.embedding)
+        YIELD node
+        RETURN distinct 'done'
     """, {'data': chunks_from_json})
 
 
