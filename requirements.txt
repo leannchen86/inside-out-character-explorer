@@ -10,3 +10,4 @@ pyvis
 networkx
 openai
 neo4j
+dotenv
