@@ -2,9 +2,9 @@ from langchain.graphs import Neo4jGraph
 import streamlit as st
 import os
 
-NEO4J_URI= st.secret(["NEO4J_URI"])
-NEO4J_USERNAME= st.secret(["NEO4J_USERNAME"])
-NEO4J_PASSWORD= st.secret(["NEO4J_PASSWORD"])
+NEO4J_URI= st.secrets(["NEO4J_URI"])
+NEO4J_USERNAME= st.secrets(["NEO4J_USERNAME"])
+NEO4J_PASSWORD= st.secrets(["NEO4J_PASSWORD"])
 
 graph = Neo4jGraph(
     url=NEO4J_URI,
