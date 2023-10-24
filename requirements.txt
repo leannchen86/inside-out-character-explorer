@@ -9,3 +9,4 @@ langchain
 pyvis
 networkx
 openai
+neo4j
