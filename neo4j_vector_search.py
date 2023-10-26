@@ -40,8 +40,8 @@ _ = load_dotenv(find_dotenv()) # read local .env file
 
 import json
 
-with open('chunks.json', 'r') as input_file:
-    chunks_from_json = json.load(input_file)
+with open('chunks_less.json', 'r') as input_file:
+    chunksless_from_json = json.load(input_file)
 
 # Store vectors to Neo4j
 # Execute the Cypher query to count all nodes
@@ -51,7 +51,7 @@ result = graph.query("MATCH (n) RETURN count(n) AS nodeCount")
 node_count = result[0]['nodeCount']
 
 # Now you can use the node_count variable in your conditions or other logic
-if node_count >= 330:
+if node_count >= 40:
     # Delete all nodes
     graph.query("MATCH (n) DETACH DELETE n")
 
@@ -63,7 +63,7 @@ if node_count >= 330:
         CALL db.create.setVectorProperty(c, 'embedding', row.embedding)
         YIELD node
         RETURN distinct 'done'
-    """, {'data': chunks_from_json})
+        """, {'data': chunksless_from_json})
 
 
 vector_search = """
