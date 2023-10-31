@@ -156,6 +156,28 @@ for scene in sample_scenes:
     # Append this scene's interaction data to the list
     interaction_data_all_scenes.append(interaction_data_scene)
 
+def sentiment_values(interaction_data, is_all_scenes=False):
+    if is_all_scenes:
+        # Flatten all the sentiments across scenes into a single list
+        sentiment_values = [data['sentiment'] for scene in interaction_data for data in scene.values()]
+    else:
+        sentiment_values = [data['sentiment'] for data in interaction_data.values()]
+
+    if not sentiment_values:
+        return None, None  # Handle empty list
+
+    # Find the minimum and maximum sentiment values
+    min_sentiment = min(sentiment_values)
+    max_sentiment = max(sentiment_values)
+
+    return min_sentiment, max_sentiment
+
+# For a single scene (single dictionary)
+min_sentiment, max_sentiment = sentiment_values(interaction_data)
+
+# For all scenes (list of dictionaries)
+min_sentiment_all, max_sentiment_all = sentiment_values(interaction_data_all_scenes, is_all_scenes=True)
+
 from pyvis.network import Network
 import networkx as nx
 
@@ -256,27 +278,6 @@ def plot_network_snapshot_pyvis(interaction_data_all_scenes, scene_number, min_s
     net.show(f"{scene_number}.html", notebook=True)
     return net  # Return the Network object, not the output of `show()`
 
-def sentiment_values(interaction_data, is_all_scenes=False):
-    if is_all_scenes:
-        # Flatten all the sentiments across scenes into a single list
-        sentiment_values = [data['sentiment'] for scene in interaction_data for data in scene.values()]
-    else:
-        sentiment_values = [data['sentiment'] for data in interaction_data.values()]
-
-    if not sentiment_values:
-        return None, None  # Handle empty list
-
-    # Find the minimum and maximum sentiment values
-    min_sentiment = min(sentiment_values)
-    max_sentiment = max(sentiment_values)
-
-    return min_sentiment, max_sentiment
-
-# For a single scene (single dictionary)
-min_sentiment, max_sentiment = sentiment_values(interaction_data)
-
-# For all scenes (list of dictionaries)
-min_sentiment_all, max_sentiment_all = sentiment_values(interaction_data_all_scenes, is_all_scenes=True)
 
 # Generate an HTML file for each scene
 for i in range(len(interaction_data_all_scenes)):
